@@ -1,0 +1,191 @@
+
+#include<bits/stdc++.h>
+using namespace std;
+template <typename T>
+
+class treenode{
+	public:
+	T data;
+	vector <treenode<T>*>children;
+	treenode(T data){
+	this->data = data;
+	}
+	 // cout<<"destruction"<<endl;
+	~treenode(){
+		for(int i=0;i<children.size();i++){
+		delete children[i];
+	}
+	}
+};
+
+
+
+
+//printfunction
+/*void printtree(treenode<int>*root){
+	cout<<root->data<<endl;
+	for(int i=0; i<root->children.size();i++){
+		printtree(root->children[i]);
+	}
+}*/
+
+/*void printtree(treenode<int>*root){
+	cout<<root->data<<":";
+	for(int i=0;i<root->children.size();i++){
+		cout<<root->children[i]->data<<",";
+	}
+	cout<<endl;
+	for(int i=0; i<root->children.size();i++){
+		printtree(root->children[i]);
+	}
+}*/
+void printtree(treenode<int>*root){
+cout<<root->data<<":";
+for(int i=0;i<root->children.size();i++){
+	cout<<root->children[i]->data<<",";
+}
+cout<<endl;
+for(int i=0;i<root->children.size();i++){
+    printtree (root->children[i]);
+}
+}
+
+//queue
+treenode<int>* takeinput1(){
+	int rootdata;
+	cout<<"enter root data"<<endl;
+	cin>>rootdata;
+	treenode <int>*root = new treenode<int>(rootdata);
+	// now want to make queue
+	//
+	queue<treenode<int>*> pendingnodes;
+	pendingnodes.push(root);
+	// kabtatk
+	while(pendingnodes.size()!=0){
+		treenode<int> * front = pendingnodes.front();
+		pendingnodes.pop();
+		cout<<"enter num of children of"<<front->data<<endl;
+		int numchild;
+		cin>>numchild;
+		for(int i=0; i<numchild;i++){
+			int childdata;
+			cout<<"enter"<<i <<"the child of"<< front->data<<endl;
+			cin>>childdata;
+			// static allocate
+			//treenode<int> child(childdata);//to live the data
+			//front->children.push_back(&child);
+			treenode<int>* child= new treenode<int>(childdata);//node make
+			front->children.push_back(child);
+			pendingnodes.push(child);
+
+		}
+	}
+
+	return root;
+
+
+}
+
+// take input
+
+treenode<int>* takeinput(){
+	int rootdata;
+	cout<<"enter the data"<<endl;
+	cin>>rootdata;
+	treenode <int>*root = new treenode<int>(rootdata);
+
+	//take children
+	int m;
+	cout<<"enter children"<< rootdata<<endl;
+	cin>>m;
+	for(int i=0;i<m;i++){
+		treenode <int>*child = takeinput();
+		root->children.push_back(child);
+	}
+	return root;
+}
+void printatlevel(treenode<int>*root, int k){
+	if(root== NULL){// age case
+		return; // agar int hota to return 0 hota par return hai in void case;
+	}
+if(k==0)
+{cout<<root->data<<endl;
+ return  ;
+}
+for(int i=0;i<root->children.size();i++){
+	printatlevel(root->children[i],k-1);
+}
+}
+
+int numnode(treenode<int>* root){
+		if(root== NULL){//age case
+		return 0;
+	}
+int ans =1;
+for(int i=0;i<root->children.size();i++){
+	ans += numnode(root-> children[i]);
+	}
+	return ans;
+
+
+}
+void preord(treenode<int>*root){
+	if(root==NULL){
+		return;
+	}
+	cout<<root->data<<" ";
+	for(int i=0;i<root->children.size();i++){
+    preord(root->children[i]);
+}
+
+}
+void postord(treenode<int>*root){
+	if(root==NULL){
+	return;}
+	for(int i=0;i<root->children.size();i++){
+		postord(root->children[i]);
+	}
+	cout<<root->data<<" ";
+}
+void deletetree(treenode<int>* root){
+	for(int i=0;i<root->children.size();i++){
+		deletetree(root->children[i]);
+	}
+	delete root;
+
+}
+
+
+// 1 3 2 3 4 2 5 6 2 7 8 0 0 0 0 1 9 0
+int main(){
+	/*treenode<int>*root=new treenode<int>(20);
+
+	treenode<int>*node=new treenode<int>(2);
+
+	treenode<int>*node1=new treenode<int>(30);*/
+	/*root->children.push_back(node);
+		root->children.push_back(node1);*/
+
+		//treenode <int> *root = takeinput();
+		treenode <int> *root = takeinput1();
+		printtree(root);
+		int numnodes = numnode(root);
+	     cout<<"no. of node is"<<numnodes<<endl;
+	     cout<<"levl 2:"<<endl;
+		printatlevel(root,2);
+		cout<<"preordered traverse"<<endl;
+		preord(root);
+		cout<<endl<<"post ordered"<<endl;
+		postord(root);
+		cout<<endl<<"delete"<<endl;
+		deletetree(root);
+
+		/*cout<<"here"<<endl;
+		cout<<root->data;
+		cout<<root->children[1]->data;
+*/
+
+
+
+return 0;}
+
